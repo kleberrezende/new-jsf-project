@@ -5,10 +5,10 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>br.com.virtualab</groupId>
-    <artifactId>new_project-project</artifactId>
+    <artifactId>new_jsf_project-project</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>new_project-project</name>
+    <name>new_jsf_project-project</name>
     <url>http://www.virtualab.com.br</url>
 
     <developers>
@@ -20,13 +20,13 @@
 
     <parent>
         <groupId>br.com.virtualab</groupId>
-        <artifactId>virtualab-project</artifactId>
+        <artifactId>virtualab-jsf-project</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 	
     <modules>
-        <module>../../virtualab-project/source</module>
-        <module>new_project</module>
+        <module>../../virtualab-jsf-project/source</module>
+        <module>new_jsf_project</module>
     </modules>
 </project>
  
