@@ -1,0 +1,121 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/template.xhtml">
+
+    <ui:define name="screen">
+        <h:form id="formLogin" prependId="false">
+            <p:panel id="panelNoLogin" header="Aviso" styleClass="form"
+                     rendered="#{principalController.inicializado == true}">
+                <p:focus context="panelNoLogin"/>
+                <br/>
+                <h:outputLabel value="Foi detectado que o sistema já está aberto."/>
+                <br/>
+                <h:outputLabel value="Favor fechar o atual para entrar novamente ou usar outro navegador."/>
+                <br/>
+                <h:outputLabel value="Em caso de dúvida feche seu navegador e abra-o novamente."/>
+            </p:panel>
+
+            <p:panel id="panelLogin" header="Login" styleClass="form"
+                     rendered="#{principalController.inicializado == false}">
+                <p:focus context="panelLogin"/>
+
+                <h:panelGrid id="grid" columns="3" columnClasses="panelGridLabel50, panelGridComponente, panelGridMensagem">
+                    <h:outputLabel for="j_username" value="Usuário"/>
+                    <h:inputText id="j_username" required="true" style="width: 122px;" 
+                                 onkeypress="resetCountDown();"/>
+                    <h:message for="j_username"/>
+
+                    <h:outputLabel for="j_password" value="Senha"/>
+                    <h:inputSecret id="j_password" required="true" style="width: 122px;" 
+                                   onkeypress="resetCountDown();"/>
+                    <h:message for="j_password"/>
+                </h:panelGrid>
+
+                <br/>
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:commandLink id="btnTrocarSenha" ajax="false" style="float: right;"
+                                       action="#{authenticationController.access}" rendered="false"
+                                       onclick="trocarSenha();
+                                               processKill();
+                                               PF('blockUI').show();">
+                            <h:outputText value="Esqueci minha senha."/>
+                            <p:confirm header="#{i18n['ui.confirmacao']}" message="Será enviado um código para o e-mail cadastrado para este usuário. Confirmar o envio do e-mail?" icon="ui-icon-alert"/>
+                        </p:commandLink>
+                    </f:facet>
+
+                    <f:facet name="right">
+                        <p:commandButton id="btnLogin" value="Entrar" icon="ui-icon-locked" ajax="false"
+                                         action="#{authenticationController.access}"
+                                         onclick="processKill();
+                                                 PF('blockUI').show();"
+                                         title="Entrar no sistema."
+                                         disabled="#{principalController.inicializado == true}"/>
+
+                        <p:commandButton id="btnSession" ajax="true"
+                                         process="@this" update="@form"
+                                         icon="ui-icon-refresh" resetValues="true"
+                                         action="#{authenticationController.keepAlive}" 
+                                         onclick="resetCountDown();" 
+                                         title="Limpar e recarregar login."/>
+
+                        <p:outputLabel id="sessionTime" value="30"/>
+                    </f:facet>
+                </p:toolbar>
+            </p:panel>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" closable="false">
+                <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>        
+            </p:confirmDialog>
+        </h:form>
+        <p:blockUI widgetVar="blockUI" block=":templatePanel" 
+                   trigger=":formLogin:btnSession">
+            <ui:include src="/pages/blockUI.xhtml"/>
+        </p:blockUI>
+
+        <script type="text/javascript">
+            /* <![CDATA[ */
+            var sMaxSession = 31;
+            var sCountDown;
+            var sProcessCountDown = null;
+
+            function trocarSenha() {
+                document.getElementById('j_password').value = "#p#";
+                document.getElementById('j_username').value = "#p#" +
+                        document.getElementById('j_username').value;
+            }
+
+            function resetCountDown() {
+                sCountDown = sMaxSession;
+            }
+
+            function processKill() {
+                if (sProcessCountDown !== null) {
+                    clearInterval(sProcessCountDown);
+                }
+            }
+
+            function sessionCountDown() {
+                sCountDown -= 1;
+                document.getElementById('sessionTime').innerHTML = sCountDown;
+                if (0 >= sCountDown) {
+                    document.getElementById('btnSession').click();
+                }
+            }
+
+            function startSessionCountDown() {
+                processKill();
+                resetCountDown();
+                sProcessCountDown = window.setInterval(sessionCountDown, 1000);
+            }
+
+            startSessionCountDown();
+            /* ]]> */
+        </script>    
+    </ui:define>
+
+</ui:composition>

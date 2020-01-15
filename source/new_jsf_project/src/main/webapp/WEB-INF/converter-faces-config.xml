@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
+              xmlns:xi="http://www.w3.org/2001/XInclude"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+                            					http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+
+    <converter>
+        <converter-class>br.com.virtualab.app.controller.converter.AbstractEntityConverterJsf</converter-class>
+        <converter-id>abstractEntityConverterJsf</converter-id>
+    </converter>
+
+    <converter>
+        <converter-class>br.com.virtualab.app.controller.converter.PerfilConverterJsf</converter-class>
+        <converter-id>perfilConverterJsf</converter-id>
+    </converter>
+
+    <converter>
+        <converter-class>br.com.virtualab.app.controller.converter.MaskToNumberConverterJsf</converter-class>
+        <converter-id>maskToNumberConverterJsf</converter-id>
+    </converter>
+
+    <converter>
+        <converter-class>br.com.virtualab.app.controller.converter.MaskToTextConverterJsf</converter-class>
+        <converter-id>maskToTextConverterJsf</converter-id>
+    </converter>
+
+    <converter>
+        <converter-class>br.com.virtualab.app.controller.converter.VirtualabEntityConverterJsf</converter-class>
+        <converter-id>virtualabEntityConverterJsf</converter-id>
+    </converter>
+
+</faces-config>

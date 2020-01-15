@@ -1,10 +1,10 @@
-/target
+*/target
 /bin
 /RemoteSystemsTempFiles
 /versões
 
 # Target gerado pelo projeto #
-/source/new_project/target
+/source/new_jsf_project/target
 
 # OS generated files #
 .DS_Store

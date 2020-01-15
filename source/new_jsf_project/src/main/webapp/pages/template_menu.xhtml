@@ -1,0 +1,108 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <style>
+        .menuGrupo.ui-datatable table thead {
+            display: none;
+        }
+
+        .menuGrupo.ui-datatable tr {
+            background: transparent none;
+        }
+
+        .menuGrupo.ui-datatable tbody td{
+            padding: 0 0 0 0;
+        }
+
+        .menuItem.ui-datatable thead th,
+        .menuItem.ui-datatable tbody,
+        .menuItem.ui-datatable tbody tr,
+        .menuItem.ui-datatable tbody td {
+            border-style: none;
+        }
+
+        .menuItem.ui-datatable tbody td{
+            padding: 2px 5px 2px 5px;
+        }
+
+        .menuItem.ui-datatable tr {
+            background: transparent none;
+        }
+
+        .menuItem.ui-datatable table thead {
+            display: none;
+        }
+
+        .ui-accordion-content.ui-helper-reset.ui-widget-content {
+            padding: 0 0 0 0;
+        }
+    </style>
+
+    <p:outputPanel style="height: 100%; width: 100%; padding: 0px; overflow: hidden;"
+                   rendered="#{principalController.habilitarMenu == true}">
+        <h:form id="formMenu" style="width: 100%; height: 100%; padding: 0;">
+            <p:layout fullPage="false" style="width: 100%; height: 100%;">
+                <p:layoutUnit position="north" resizable="false" closable="false" collapsible="false" style="border-style: none; padding: 0px;">
+
+                    <p:outputPanel id="panelMenuBusca" style="height: 100%; width: 100%; padding: 0px; overflow: hidden;">
+                        <p:toolbar>
+                            <f:facet name="left">
+                                <h:panelGrid columns="2">
+                                    <p:outputLabel styleClass="ui-icon ui-icon-search"/>
+                                    <p:inputText id="inputFiltrarMenu" value="#{principalController.filtroMenu}" style="width:150px" onfocus="this.value = this.value">
+                                        <p:ajax event="keyup" listener="#{principalController.filtrarMenu}" delay="500" update="panelMenu" process="@this"/>
+                                    </p:inputText>
+                                    <p:watermark id="watermarkFiltrarMenu" for="inputFiltrarMenu" value="Buscar menu"/>
+                                </h:panelGrid>
+                            </f:facet>
+                        </p:toolbar>
+                    </p:outputPanel>
+
+                    <p:blockUI block=":templatePanel" trigger="inputFiltrarMenu">
+                        <ui:include src="/pages/blockUI.xhtml"/>
+                    </p:blockUI>
+
+                </p:layoutUnit>
+                <p:layoutUnit position="center" resizable="false" closable="false" collapsible="false" style="border-style: none; padding: 0px;">
+
+                    <p:outputPanel id="panelMenu" style="overflow: hidden;">
+                        <p:dataTable id="menusDT" var="menuGrupo" widgetVar="menuGrupoDT"
+                                     value="#{principalController.menuGrupos}" 
+                                     emptyMessage="Link não encontrado"
+                                     styleClass="menuGrupo">
+                            <f:facet name="footer">
+                                <p:outputPanel/>
+                            </f:facet>
+
+                            <p:column rendered="#{menuGrupo.grupoVisivel and not empty menuGrupo.menuItens}">
+                                <p:accordionPanel activeIndex="-1">
+                                    <p:tab title="#{menuGrupo.grupo}">
+                                        <p:dataTable var="menuItem" widgetVar="menuItemDT"
+                                                     value="#{menuGrupo.menuItens}" 
+                                                     emptyMessage="Link não encontrado" 
+                                                     styleClass="menuItem">
+                                            <p:column rendered="#{menuItem.itemVisivel and menuItem.itemPermissao}">
+                                                <p:commandButton value="#{menuItem.displayLabel}"
+                                                                 action="#{menuItem.getLink}" 
+                                                                 ajax="false" icon="#{menuItem.iconeMenu}"
+                                                                 style="width: 100%; text-align: left;"
+                                                                 disabled="#{principalController.habilitarMenu == false}">
+                                                    <f:setPropertyActionListener value="#{menuItem}" target="#{principalController.itemMenuSelecionado}"/>
+                                                </p:commandButton>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:tab>
+                                </p:accordionPanel>
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
+
+                </p:layoutUnit>
+            </p:layout>
+        </h:form>
+    </p:outputPanel>
+
+</ui:composition>

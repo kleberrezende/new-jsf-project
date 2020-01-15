@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+		 
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>br.com.virtualab</groupId>
+    <artifactId>new_jsf_project</artifactId>
+    <packaging>war</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <name>new_jsf_project</name>
+    <url>http://www.virtualab.com.br</url>
+
+    <developers>
+        <developer>
+            <id>kleberrezende</id>
+            <name>Kleber Rezende</name>
+        </developer>
+    </developers>
+
+    <parent>
+        <groupId>br.com.virtualab</groupId>
+        <artifactId>new_jsf_project-project</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+	
+    <dependencies>
+        <!-- Project -->
+        <dependency>
+            <groupId>br.com.virtualab</groupId>
+            <artifactId>virtualab-jsf</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+	
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>com.mysema.maven</groupId>
+                <artifactId>apt-maven-plugin</artifactId>
+                <version>1.0.9</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>process</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>target/generated-sources/java</outputDirectory>
+                            <processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.1.1</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-2</version>
+                <executions>
+                    <execution>
+                        <id>setar</id>
+                        <goals>
+                            <goal>set-system-properties</goal>
+                        </goals>
+                        <configuration>
+                            <properties>
+                                <property>
+                                    <name>project.name</name>
+                                    <value>${project.name}</value>
+                                </property>
+                                <property>
+                                    <name>project.version</name>
+                                    <value>${project.version}</value>
+                                </property>
+                            </properties>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>gerar</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>write-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <outputFile>
+                                ${project.build.outputDirectory}/project.properties
+                            </outputFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--********************** REPORT **********************-->
+            <plugin>
+                <groupId>com.alexnederlof</groupId>
+                <artifactId>jasperreports-plugin</artifactId>
+                <version>${jasperreports-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>jasper</goal>
+                        </goals>                        
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <!-- These are the default configurations: -->
+                    <compiler>net.sf.jasperreports.engine.design.JRJdtCompiler</compiler>
+                    <sourceDirectory>src/main/jasperreports/relatorios</sourceDirectory>
+                    <outputDirectory>${project.build.directory}/classes/relatorios</outputDirectory>
+                    <outputFileExt>.jasper</outputFileExt>
+                    <xmlValidation>true</xmlValidation>
+                    <verbose>false</verbose>
+                    <numberOfThreads>4</numberOfThreads>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <properties>
+        <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
+    </properties>
+	
+</project>

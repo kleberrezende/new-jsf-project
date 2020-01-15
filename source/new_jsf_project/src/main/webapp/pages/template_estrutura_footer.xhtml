@@ -1,0 +1,24 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <style>
+        .ui-clock {
+            font-weight: normal;
+        }
+    </style>
+
+    <h:panelGrid columns="3" style="vertical-align: middle; float: right; padding: 0px; overflow: hidden;">
+        <h:outputText value="Todos os direitos reservados." />
+        <p:spacer/>
+        <p:graphicImage value="/assert/logoVL.png" title="Virtua Lab" style="width: 35px; height: 35px;"/>
+    </h:panelGrid>
+
+    <h:panelGrid columns="7" style="vertical-align: middle; float: left; padding: 0px; height: 40px; overflow: hidden;">
+        <ui:include src="/pages/template_session.xhtml"/>
+        <p:outputLabel value="Data\Hora Servidor"/>
+        <p:clock pattern="dd/MM/yyyy HH:mm" mode="server"/>
+    </h:panelGrid>
+</ui:composition>

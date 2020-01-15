@@ -1,0 +1,73 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <style>
+        .template_toolbar_versao {
+            overflow: hidden;
+            padding: 0px;
+            margin: 0px;
+            min-height: 32px;
+        }
+
+        .template_ajax_status {
+            min-width: 30px;
+            min-height: 30px;
+            vertical-align: middle;
+            padding: 0px;
+
+        }
+
+        .template_versao {
+            text-align: right;
+            vertical-align: middle;
+            height: 30px;
+            min-height: 30px;
+            padding: 0px;
+        }
+
+        .template_top_column {
+            text-align: right;
+            vertical-align: middle;
+            height: 30px;
+            min-height: 30px;
+            padding: 0px;
+        }
+    </style>
+
+    <h:form prependId="false">
+        <p:toolbar styleClass="template_toolbar_versao">
+            <f:facet name="left">
+                <h:panelGrid columns="12" styleClass="template_ajax_status, template_top_column">
+                    <p:ajaxStatus style="width:16px;height:16px;">
+                        <f:facet name="start">
+                            <p:graphicImage value="/assert/ajaxloading.gif" />
+                        </f:facet>
+                        <f:facet name="complete">
+                            <h:outputText value="" />
+                        </f:facet>
+                    </p:ajaxStatus>
+                    <p:outputLabel value=" | " />
+                    <p:spacer width="5"/>
+                    <p:outputLabel value="#{project['project.name']}"/>
+                    <p:spacer width="5"/>
+                    <p:outputLabel value=" | " />
+                    <p:spacer width="5"/>
+                    <p:outputLabel value="#{i18n['ui.usuario']}: #{principalController.usuarioLogin.name}" />
+                    <p:spacer width="5"/>
+                    <p:outputLabel value=" | " />
+                    <p:spacer width="5"/>
+                    <p:commandButton value="#{i18n['ui.sair']}" icon="ui-icon-power" action="#{authenticationController.exit}" ajax="false" style="height: 30px; vertical-align: text-top;"/>
+                </h:panelGrid>
+            </f:facet>
+
+            <f:facet name="right">
+                <h:panelGrid columns="1" columnClasses="template_versao">
+                    <p:outputLabel value="#{i18n['ui.versao']} (#{project['project.version']})"/>
+                </h:panelGrid>
+            </f:facet>
+        </p:toolbar>
+    </h:form>
+
+</ui:composition>

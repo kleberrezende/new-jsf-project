@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:loadBundle basename="i18n.messages" var="i18n" />
+    <f:loadBundle basename="project" var="project" />
+
+    <h:head>
+        <link rel="icon" type="image/x-icon" href="../assert/logo.ico"/>
+        <title><h:outputText value="#{project['project.name']}" /></title>
+        <meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
+        <style>
+            * {
+                font-family: NeueHelvetica, FrutigerNeue, Helvetica, Arial, sans-serif;
+                font-size: 0.98em;
+            }
+
+            .panelGridLabel, .panelGridLabel50, .panelGridLabel120, .panelGridLabel130, .panelGridLabel140, .panelGridLabel150 {
+                text-align: right;
+                vertical-align: middle;
+            }
+
+            .panelGridLabel50 {
+                width: 50px;
+            }
+
+            .panelGridLabel120 {
+                width: 120px;
+            }
+
+            .panelGridLabel130 {
+                width: 130px;
+            }
+
+            .panelGridLabel140 {
+                width: 140px;
+            }
+
+            .panelGridLabel150 {
+                width: 150px;
+            }
+
+            .panelGridComponente {
+
+            }
+
+            .panelGridMensagem {
+
+            }
+
+            .panelGridColumnNormal {
+                text-align: right;
+                vertical-align: middle;
+                height: 30px;
+                min-height: 30px;
+                padding: 0px;
+            }
+
+            .panelGridColumnCenter {
+                text-align: center;
+                vertical-align: middle;
+                height: 30px;
+                min-height: 30px;
+                padding: 0px;
+            }
+
+            .columnLeft {
+                text-align: left;
+                vertical-align: middle;
+            }
+
+            .dataTable {
+                border-style: solid;
+                border-width: 1px;
+            }
+
+            .template_screen {
+                width: 700px; 
+                margin-left:-350px; 
+                left: 50%; 
+                position: absolute; 
+                text-align: left;
+            }
+
+            .customReportDialog {
+                background: none;
+                margin-top: 20px;
+            }
+
+            .ui-dialog.customReportDialog .ui-dialog-content {
+                padding: 0;
+                margin: 0;
+            }
+        </style>
+        <script type="text/javascript">
+            /* <![CDATA[ */
+            function preventBack() {
+                window.history.forward();
+            }
+
+            setTimeout("preventBack()", 0);
+
+            window.onunload = function () {
+                null;
+            };
+            /* ]]> */
+        </script>
+    </h:head>
+
+    <h:body>
+        <h:form prependId="false" id="formGrowl">
+            <p:growl id="growl" globalOnly="true" autoUpdate="true"/>
+        </h:form>
+
+        <p:outputPanel id="templatePanel" style="width: 100%; height: 100%; padding: 0px;">
+            <p:layout fullPage="true">
+                <p:layoutUnit position="north" resizable="false" closable="false" collapsible="false" style="height: 32px; min-height: 32px; padding: 0px; padding-left: 5px; padding-right: 5px;">
+                    <ui:include src="/pages/template_estrutura_top.xhtml"/>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="south" size="50" resizable="false" closable="false" collapsible="false" style="border-style: solid; padding: 0px;">
+                    <ui:include src="/pages/template_estrutura_footer.xhtml"/>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="west" size="215" header="Menu" resizable="false" closable="false" collapsible="false" style="padding-left: 2px; padding-bottom: 15px;">
+                    <ui:include src="/pages/template_menu.xhtml"/>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center" style="border-style: none; padding: 0px; padding-right: 5px; ">
+                    <p:layout fullPage="false">
+                        <p:layoutUnit position="north" resizable="false" closable="false" collapsible="false" style="border-style: none; height: 32px; min-height: 32px; padding: 0px; padding-left: 5px; padding-right: 5px;">
+                            <h:form prependId="false">
+                                <p:toolbar style="min-height: 32px; padding: 0px; overflow-y: hidden;">
+                                    <f:facet name="left">
+                                        <h:panelGrid columns="2" columnClasses="panelGridColumnCenter" style="width: 100%;">
+                                            <p:commandButton id="btnFavorito" 
+                                                             title="#{principalController.itemMenuSelecionado.favorito == true? 'Remover dos favoritos' : 'Adicionar aos favoritos'}" 
+                                                             icon="ui-icon-star"
+                                                             action="#{principalController.favoritoAddOrRemove}"
+                                                             rendered="#{principalController.itemMenuSelecionado != null}"
+                                                             update="@this, :formMenu"/>
+                                            <ui:insert name="title"/>
+                                        </h:panelGrid>
+                                    </f:facet>
+                                </p:toolbar>
+                                <p:blockUI block=":templatePanel" trigger="btnFavorito">
+                                    <ui:include src="/pages/blockUI.xhtml"/>
+                                </p:blockUI>
+                            </h:form>
+                        </p:layoutUnit>
+                        <p:layoutUnit position="center" style="border-style: none; padding: 0px; padding-right: 5px; ">
+                            <ui:insert name="screen"/>
+                        </p:layoutUnit>
+                    </p:layout>
+                </p:layoutUnit>
+            </p:layout>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" closable="false" appendTo="@(body)" width="500">
+                <f:facet name="message">
+                    <p:outputLabel value="Definir texto."/>
+                    <br/>
+                    <h:outputText value="Mensagem não definida."/>
+                </f:facet>
+                <h:form prependId="false">
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>        
+                </h:form>
+            </p:confirmDialog>
+        </p:outputPanel>
+    </h:body>
+
+</html>

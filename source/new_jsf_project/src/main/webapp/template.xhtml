@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:loadBundle basename="i18n.messages" var="i18n" />
+    <f:loadBundle basename="project" var="project" />
+
+    <h:head>
+        <link rel="icon" type="image/x-icon" href="assert/logo.ico"/>
+        <title><h:outputText value="#{project['project.name']}" /></title>
+        <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+        <style>
+            *{
+                font-family: Helvetica, Arial, sans-serif;
+                font-size: 0.97em;
+            }
+
+            .panelGridLabel, .panelGridLabel50, .panelGridLabel120 {
+                text-align: right;
+                vertical-align: middle;
+            }
+
+            .panelGridLabel50 {
+                width: 50px;
+            }
+
+            .panelGridLabel120 {
+                width: 120px;
+            }
+
+            .panelGridComponente {
+
+            }
+
+            .panelGridMensagem {
+
+            }
+
+            .form {
+                position: absolute;
+                width: 400px;
+                margin-left: -200px;
+                left: 50%;
+                margin-top: -100px;
+                top: 50%;
+            }
+
+        </style>        
+    </h:head>
+
+    <h:body>
+        <h:form prependId="false">
+            <p:growl autoUpdate="true" globalOnly="true" id="growl"/>
+        </h:form>
+
+        <p:outputPanel id="templatePanel" style="width: 100%; height: 100%; padding: 0px;">
+            <p:layout fullPage="true">
+                <p:layoutUnit position="center" style="border-style: none; padding: 0px; padding-right: 5px; ">
+                    <ui:insert name="screen"/>
+                </p:layoutUnit>
+            </p:layout>
+        </p:outputPanel>
+    </h:body>
+
+</html>

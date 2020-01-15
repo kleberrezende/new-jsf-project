@@ -1,0 +1,35 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/template.xhtml">
+
+    <ui:define name="title">
+        <p:outputLabel value="Página inicial do sistema."/>
+    </ui:define>
+
+    <ui:define name="screen">
+        <f:metadata>
+            <f:event listener="#{principalController.inicializar}" type="preRenderView"/>
+        </f:metadata>
+
+        <h:form prependId="false" id="formMain" style="text-align: left; height: 99%; padding: 0px;">
+            <p:outputPanel style="height: 100%; min-height: 100%; max-height: 100%;"
+                           rendered="#{principalController.inicializado == true}">
+                <p:outputLabel value="Selecione um item no 'MENU', no lado esquerdo da tela."/>
+                <br/>
+                <p:graphicImage value="/assert/logoVL.png" title="Virtua Lab" style="width: 128px; height: 128px;"/>
+            </p:outputPanel>
+
+            <p:outputPanel style="height: 100%; min-height: 100%; max-height: 100%;"
+                           rendered="#{principalController.inicializado == false}">
+                <p:outputLabel value="ERRO. Classe principal não inicializada!!!"
+                               style="color: red; font-weight: bold;"/>
+                <br/>
+                <p:graphicImage value="/assert/logoVL.png" title="Virtua Lab" style="width: 128px; height: 128px;"/>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+
+</ui:composition>
