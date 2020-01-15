@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/template.xhtml">
+
+    <ui:define name="title">
+        <p:outputLabel value="Configurações"/>
+    </ui:define>
+
+    <ui:define name="screen">
+        <f:metadata>
+            <f:event listener="#{configuracoesController.inicializar}" type="preRenderView"/>
+        </f:metadata>
+
+        <h:form prependId="false" id="formMain" style="text-align: center; height: 99%; padding: 0px;">
+            <p:panel styleClass="template_screen" rendered="#{!configuracoesController.acessoPermitidoTela}">
+                <p:outputLabel value="#{i18n['ui.acessoNegadoUsuario']}"/>
+            </p:panel>
+
+            <p:panel id="panelMain" styleClass="template_screen"  
+                     rendered="#{configuracoesController.acessoPermitidoTela}">
+                <p:outputPanel id="cadastroPanel">
+                    <p:focus context="cadastroPanel"/>
+                    <p:outputLabel value="ATENÇÃO!!!" style="color: red; font-weight: bold;"/>
+                    <br/>
+                    <p:outputLabel value="As alterações só terão efeito da próxima vez em que o usuário entrar no sistema."/>
+                    <br/>
+                    <br/>
+
+                    <p:tabView>
+                        <p:tab title="Geral">
+                            <ui:include src="configGeral.xhtml"/>
+                        </p:tab>
+                    </p:tabView>     
+
+                    <br/>
+                    <p:toolbar>
+                        <f:facet name="right">
+                            <p:commandButton id="btnCadSalvar" value="#{i18n['ui.salvar']}" icon="ui-icon-check" action="#{configuracoesController.salvar}"
+                                             process="cadastroPanel" update="cadastroPanel"/>
+                        </f:facet>
+                    </p:toolbar>
+                </p:outputPanel>
+            </p:panel>
+        </h:form>
+
+        <p:blockUI block=":templatePanel" trigger=":formMain:btnCadSalvar">
+            <ui:include src="/pages/blockUI.xhtml"/>
+        </p:blockUI>
+    </ui:define>
+
+</ui:composition>

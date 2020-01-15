@@ -1,0 +1,158 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/template.xhtml">
+
+    <ui:define name="title">
+        <p:outputLabel value="Cadastro de usuário"/>
+    </ui:define>
+
+    <ui:define name="screen">
+        <f:metadata>
+            <f:event listener="#{cadastroUsuarioController.inicializar}" type="preRenderView"/>
+        </f:metadata>
+
+        <h:form prependId="false" id="formMain" style="text-align: center; height: 99%; padding: 0px;">
+            <p:panel styleClass="template_screen" rendered="#{!cadastroUsuarioController.acessoPermitidoTela}">
+                <p:outputLabel value="#{i18n['ui.acessoNegadoUsuario']}"/>
+            </p:panel>
+
+            <p:panel id="panelMain" styleClass="template_screen" 
+                     rendered="#{cadastroUsuarioController.acessoPermitidoTela}"
+                     header="#{cadastroUsuarioController.localizarRendered ? i18n['ui.cadastro.titleLocalizar'] : i18n['ui.cadastro.titleCadastro']}">
+                <p:outputPanel id="cadastroPanel" rendered="#{!cadastroUsuarioController.localizarRendered}">
+                    <p:focus context="cadastroPanel"/>
+                    <h:panelGrid columns="2" columnClasses="panelGridLabel120, panelGridComponente">
+                        <p:outputLabel for="inputNome" value="Nome"/>
+                        <p:inputText id="inputNome" value="#{cadastroUsuarioController.usuario.name}" maxlength="#{cadastroUsuarioController.usuarioSize.nameSize}" 
+                                     size="#{cadastroUsuarioController.usuarioSize.nameSize}" required="true"/>
+                        <p:outputLabel/>
+                        <p:message for="inputNome"/>
+
+                        <p:outputLabel for="inputUserName" value="Nome de usuário"/>
+                        <p:inputText id="inputUserName" value="#{cadastroUsuarioController.usuario.username}" maxlength="#{cadastroUsuarioController.usuarioSize.usernameSize}" 
+                                     size="#{cadastroUsuarioController.usuarioSize.usernameSize}" required="true"/>
+                        <p:outputLabel/>
+                        <p:message for="inputUserName"/>
+
+                        <p:outputLabel for="inputEmail" value="e-mail"/>
+                        <p:inputText id="inputEmail" value="#{cadastroUsuarioController.usuario.email}" 
+                                     maxlength="#{cadastroUsuarioController.usuarioSize.emailSize}" 
+                                     size="#{cadastroUsuarioController.usuarioSize.emailSize}" 
+                                     required="true"/>
+                        <p:outputLabel/>
+                        <p:message for="inputEmail"/>
+
+                        <p:outputLabel for="inputHabilitado" value="Habilitado"/>
+                        <p:selectBooleanCheckbox id="inputHabilitado" value="#{cadastroUsuarioController.usuario.enabled}"/>
+                        <p:outputLabel/>
+                        <p:message for="inputHabilitado"/>
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="2" columnClasses="panelGridLabel120, panelGridComponente"
+                                 rendered="#{cadastroUsuarioController.alterarSenha == true}">
+                        <p:outputLabel for="inputPassword" value="Senha"/>
+                        <p:password id="inputPassword" value="#{cadastroUsuarioController.usuario.password}" 
+                                    maxlength="#{cadastroUsuarioController.usuarioSize.passwordSize}" 
+                                    size="#{cadastroUsuarioController.usuarioSize.passwordSize}" 
+                                    required="true" feedback="true" inline="true" label="Senha"
+                                    match="inputConfirmarSenha" promptLabel="Digite a senha"
+                                    goodLabel="Boa" strongLabel="Forte" weakLabel="Fraca" 
+                                    validatorMessage="Senha diferente de confirmar senha."/>
+                        <p:outputLabel/>
+                        <p:message for="inputPassword"/>
+
+                        <p:outputLabel for="inputConfirmarSenha" value="Confirmar senha"/>
+                        <p:password id="inputConfirmarSenha" value="#{cadastroUsuarioController.usuario.confirmarPassword}" 
+                                    maxlength="#{cadastroUsuarioController.usuarioSize.passwordSize}" 
+                                    size="#{cadastroUsuarioController.usuarioSize.passwordSize}" 
+                                    required="true" feedback="false" label="Confirmar senha"/>
+                        <p:outputLabel/>
+                        <p:message for="inputConfirmarSenha"/>
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="2" columnClasses="panelGridLabel120, panelGridComponente"
+                                 rendered="#{cadastroUsuarioController.alterarSenha == false}">
+                        <p:outputLabel value="Senha"/>
+                        <p:commandButton value="Alterar" 
+                                         process="@this" update="cadastroPanel">
+                            <f:setPropertyActionListener value="#{true}" target="#{cadastroUsuarioController.alterarSenha}"/>
+                        </p:commandButton>
+                    </h:panelGrid>
+
+                    <br/>
+                    <p:pickList id="pickList" value="#{cadastroUsuarioController.perfilDualList}" var="perfil" 
+                                itemValue="#{perfil}" itemLabel="#{perfil.titulo}" converter="perfilConverterJsf">
+                        <f:facet name="sourceCaption">Perfis disponíveis</f:facet>
+                        <f:facet name="targetCaption">Perfis selecionados</f:facet>
+                    </p:pickList>
+
+                    <br/>
+                    <p:toolbar>
+                        <f:facet name="right">
+                            <p:commandButton id="btnCadSalvar" value="#{i18n['ui.salvar']}" icon="ui-icon-check" action="#{cadastroUsuarioController.salvar}"
+                                             process="cadastroPanel" update="cadastroPanel"/>
+                            <p:commandButton id="btnCadLimpar" value="#{i18n['ui.limpar']}" icon="ui-icon-document" action="#{cadastroUsuarioController.limpar}"
+                                             process="@this" update=":formMain" resetValues="true"/>
+                            <p:commandButton id="btnCadLocalizar" value="#{i18n['ui.localizar']}" icon="ui-icon-search" 
+                                             action="#{cadastroUsuarioController.iniciarConsulta}" process="@this" update=":formMain"/>
+                        </f:facet>
+                    </p:toolbar>
+                </p:outputPanel>
+
+                <p:outputPanel id="localizarPanel" rendered="#{cadastroUsuarioController.localizarRendered}">
+                    <p:focus context="localizarPanel"/>
+                    <h:panelGrid columns="2" columnClasses="panelGridLabel120, panelGridComponente">
+                        <p:outputLabel for="inputNomeLoc" value="Nome"/>
+                        <p:inputText id="inputNomeLoc" value="#{cadastroUsuarioController.usuarioLocalizar.name}" maxlength="#{cadastroUsuarioController.usuarioSize.nameSize}"
+                                     size="#{cadastroUsuarioController.usuarioSize.nameSize}"/>
+
+                        <p:outputLabel for="inputUserNameLoc" value="Usuário"/>
+                        <p:inputText id="inputUserNameLoc" value="#{cadastroUsuarioController.usuarioLocalizar.username}" maxlength="#{cadastroUsuarioController.usuarioSize.usernameSize}"
+                                     size="#{cadastroUsuarioController.usuarioSize.usernameSize}"/>
+                    </h:panelGrid>
+
+                    <br/>
+                    <p:toolbar>
+                        <f:facet name="right">
+                            <p:commandButton id="btnLocLocalizar" value="#{i18n['ui.localizar']}" icon="ui-icon-search" action="#{cadastroUsuarioController.localizar}" process="localizarPanel" update="localizarPanel"/>
+                            <p:commandButton id="btnLocVoltar" value="#{i18n['ui.voltar']}" icon="ui-icon-arrowrefresh-1-w" process="@this" update=":formMain">
+                                <f:setPropertyActionListener value="#{false}" target="#{cadastroUsuarioController.localizarRendered}"/>
+                            </p:commandButton>
+                        </f:facet>
+                    </p:toolbar>
+
+                    <br/>
+                    <p:dataTable id="resultadoDT" var="obj" value="#{cadastroUsuarioController.localizarDataSet}" 
+                                 emptyMessage="#{i18n['ui.listaVazia']}" scrollable="true" scrollHeight="150" styleClass="dataTable">
+                        <p:column headerText="#{i18n['ui.cadastro.localizar.resultados.opcoes']}" style="width: 100px; text-align: center; vertical-align: middle;">
+                            <p:commandButton id="btnLocEditar" icon="ui-icon-pencil" title="Editar" 
+                                             actionListener="#{cadastroUsuarioController.editar}" 
+                                             process="@this" update=":formMain" resetValues="true"
+                                             onstart="PF('blockUI').show();"
+                                             oncomplete="PF('blockUI').hide();">
+                                <f:attribute name="obj" value="#{obj}"/>
+                                <f:setPropertyActionListener value="#{false}" target="#{cadastroUsuarioController.localizarRendered}"/>
+                            </p:commandButton>
+                        </p:column>
+
+                        <p:column headerText="Nome" style="width: 350px; text-align: left; vertical-align: middle;">
+                            <p:outputLabel value="#{obj.name}"/>
+                        </p:column>
+
+                        <p:column headerText="Usuário" style="width: 350px; text-align: left; vertical-align: middle;">
+                            <p:outputLabel value="#{obj.username}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </p:panel>
+        </h:form>
+
+        <p:blockUI widgetVar="blockUI" block=":templatePanel" trigger=":formMain:btnCadSalvar, :formMain:btnCadLimpar, :formMain:btnCadLocalizar, :formMain:btnLocLocalizar, :formMain:btnLocVoltar">
+            <ui:include src="/pages/blockUI.xhtml"/>
+        </p:blockUI>
+    </ui:define>
+
+</ui:composition>

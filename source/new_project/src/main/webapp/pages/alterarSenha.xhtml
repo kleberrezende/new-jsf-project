@@ -1,0 +1,70 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/template.xhtml">
+
+    <ui:define name="title">
+        <p:outputLabel value="Alterar senha."/>
+    </ui:define>
+
+    <ui:define name="screen">
+        <f:metadata>
+            <f:event listener="#{alterarSenhaController.inicializar}" type="preRenderView"/>
+        </f:metadata>
+
+        <h:form prependId="false" id="formMain" style="text-align: center; height: 99%; padding: 0px;">
+            <p:panel styleClass="template_screen" rendered="#{!alterarSenhaController.acessoPermitidoTela}">
+                <p:outputLabel value="#{i18n['ui.acessoNegadoUsuario']}"/>
+            </p:panel>
+
+            <p:panel id="panelMain" styleClass="template_screen" 
+                     rendered="#{alterarSenhaController.acessoPermitidoTela}"
+                     header="Alterar senha do usuário logado.">
+                <p:outputPanel id="cadastroPanel">
+                    <p:focus context="cadastroPanel"/>
+                    <h:panelGrid columns="2" columnClasses="panelGridLabel120, panelGridComponente">
+                        <p:outputLabel value="Nome"/>
+                        <p:outputLabel value="#{alterarSenhaController.usuario.name}"/>
+
+                        <p:outputLabel value="Nome de usuário"/>
+                        <p:outputLabel value="#{alterarSenhaController.usuario.username}"/>
+
+                        <p:outputLabel for="inputPassword" value="Senha"/>
+                        <p:password id="inputPassword" value="#{alterarSenhaController.usuario.password}" 
+                                    maxlength="#{alterarSenhaController.usuarioSize.passwordSize}" 
+                                    size="#{alterarSenhaController.usuarioSize.passwordSize}" 
+                                    required="true" feedback="true" inline="true" label="Senha"
+                                    match="inputConfirmarSenha" promptLabel="Digite a senha"
+                                    goodLabel="Boa" strongLabel="Forte" weakLabel="Fraca" 
+                                    validatorMessage="Senha diferente de confirmar senha."/>
+                        <p:outputLabel/>
+                        <p:message for="inputPassword"/>
+
+                        <p:outputLabel for="inputConfirmarSenha" value="Confirmar senha"/>
+                        <p:password id="inputConfirmarSenha" value="#{alterarSenhaController.usuario.confirmarPassword}" 
+                                    maxlength="#{alterarSenhaController.usuarioSize.passwordSize}" 
+                                    size="#{alterarSenhaController.usuarioSize.passwordSize}" 
+                                    required="true" feedback="false" label="Confirmar senha"/>
+                        <p:outputLabel/>
+                        <p:message for="inputConfirmarSenha"/>
+                    </h:panelGrid>
+
+                    <br/>
+                    <p:toolbar>
+                        <f:facet name="right">
+                            <p:commandButton id="btnCadSalvar" value="#{i18n['ui.salvar']}" icon="ui-icon-check" action="#{alterarSenhaController.salvar}"
+                                             process="cadastroPanel" update="cadastroPanel"/>
+                        </f:facet>
+                    </p:toolbar>
+                </p:outputPanel>
+            </p:panel>
+        </h:form>
+
+        <p:blockUI widgetVar="blockUI" block=":templatePanel" trigger=":formMain:btnCadSalvar">
+            <ui:include src="/pages/blockUI.xhtml"/>
+        </p:blockUI>
+    </ui:define>
+
+</ui:composition>

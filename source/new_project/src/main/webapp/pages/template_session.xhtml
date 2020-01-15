@@ -1,0 +1,115 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <style>
+        .template_toolbar_sessiontime {
+            padding: 0px;
+            margin: 0px;
+            min-height: 25px;
+            width: 65px;
+        }
+
+        .template_sessiontime_collmun {
+            padding: 0px;
+            margin: 0px;
+            min-height: 25px;
+            width: 65px;
+            vertical-align: middle;
+            text-align: center;
+            font-size: 16px;
+        }
+    </style>
+
+    <h:form prependId="false">
+        <h:panelGrid columns="2">
+            <p:outputLabel value="Sessão expira em "/>
+            <p:toolbar styleClass="template_toolbar_sessiontime">
+                <f:facet name="left">
+                    <h:panelGrid columns="1" styleClass="template_sessiontime_collmun">
+                        <p:outputLabel id="sessionTime" styleClass="ui-clock" style="padding: 0px;"/>
+                    </h:panelGrid>
+                </f:facet>
+            </p:toolbar>
+        </h:panelGrid>
+    </h:form>
+
+    <p:ajaxStatus onsuccess="startSessionCountDown();"/>
+
+    <p:dialog widgetVar="sessionDialog" 
+              header="Alerta" 
+              modal="true" draggable="false" 
+              closable="false" resizable="false" 
+              appendTo="@(body)">
+        <h:form id="sessionDialogForm" style="overflow-x: hidden; overflow-y: hidden;"> 
+            <p:outputLabel value="Sua sessão expirará em "/>
+            <p:outputLabel id="sessionDlgTime" style="font-weight: bold;"/>
+            <br/>
+            <p:outputLabel value="Deseja continuar em sua sessão?"/>
+            <br/>
+            <br/>
+            <p:toolbar>
+                <f:facet name="right">
+                    <p:commandButton value="Sim" process="@this" update="@none" 
+                                     icon="ui-icon-check"
+                                     oncomplete="PF('sessionDialog').hide();" 
+                                     onclick="startSessionCountDown();"
+                                     action="#{authenticationController.keepAlive}"/>
+                    <p:commandButton id="btnSessionExit" value="Não" process="@this" 
+                                     icon="ui-icon-close"
+                                     actionListener="#{authenticationController.exit}" ajax="false"/>
+                </f:facet>
+            </p:toolbar>
+        </h:form>
+    </p:dialog>
+
+    <script type="text/javascript">
+        /* <![CDATA[ */
+        var sMaxSession = #{session.maxInactiveInterval};
+        var sCountDown;
+        var sMinute = 0;
+        var sSecond = 0;
+        var sProcessCountDown = null;
+        var sDialog = false;
+
+        function sessionCountDownToTime() {
+            sCountDown -= 1;
+            sSecond = sCountDown;
+            sMinute = 0;
+            while (sSecond > 59) {
+                sMinute += 1;
+                sSecond = sSecond - 60;
+            }
+        }
+
+        function sessionCountDown() {
+            sessionCountDownToTime();
+            document.getElementById('sessionTime').innerHTML = sMinute + 'm:' + sSecond + 's';
+            if (30 >= sCountDown && sDialog === false) {
+                sDialog = true;
+                PF('sessionDialog').show();
+            }
+            if (sDialog === true) {
+                document.getElementById('sessionDialogForm:sessionDlgTime').innerHTML = sMinute + 'm:' + sSecond + 's';
+            }
+            if (0 >= sCountDown) {
+                document.getElementById('sessionDialogForm:btnSessionExit').click();
+            }
+        }
+
+        function startSessionCountDown() {
+            if (sProcessCountDown !== null) {
+                clearInterval(sProcessCountDown);
+            }
+            sDialog = false;
+            sCountDown = sMaxSession - 30;
+            sProcessCountDown = window.setInterval(sessionCountDown, 1000);
+        }
+
+        startSessionCountDown();
+        /* ]]> */
+    </script>    
+
+</ui:composition>

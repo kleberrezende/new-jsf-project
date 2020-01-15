@@ -1,0 +1,31 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:outputPanel id="configGeralPanel">
+        <p:focus context="configGeralPanel"/>
+        <h:panelGrid columns="2" columnClasses="panelGridLabel120, panelGridComponente">
+            <p:outputLabel for="inputTema" value="Tema" /> 
+            <p:themeSwitcher id="inputTema" style="width:250px" effect="fade" var="t" required="true"
+                             value="#{configuracoesController.configuracoes.temaSistema}">
+                <f:selectItems value="#{configuracoesController.temaFactory.temas}" var="tema" itemLabel="#{tema.displayName}" itemValue="#{tema}"/>
+
+                <p:column>
+                    <p:graphicImage value="/assert/tema/#{t.name}.png" styleClass="ui-theme ui-theme-" style="display-block"/>
+                </p:column>
+                <p:column>
+                    <p:outputLabel value="#{t.displayName}"/>
+                </p:column>
+            </p:themeSwitcher>                        
+            <p:outputLabel/>
+            <p:message for="inputTema"/>
+
+            <p:outputLabel/>
+            <p:commandButton id="btnTemaDefault" value="Tema padrão" icon="ui-icon-image" 
+                             action="#{configuracoesController.temaDefault}"
+                             ajax="false"/>
+        </h:panelGrid>
+    </p:outputPanel>
+</ui:composition>
